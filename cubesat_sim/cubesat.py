@@ -7,7 +7,7 @@ from scipy.spatial.transform import Rotation
 from .components.component import Component
 from .forces.force import Force
 from .utils.quaternion import Quaternion
-from .utils.constants import CUBESAT_UNIT
+from .utils.constants import Constants
 
 class CubeSat:
     """
@@ -41,9 +41,9 @@ class CubeSat:
         
         # Set dimensions based on size_units
         if isinstance(size_units, (int, float)):
-            self.dimensions = np.array([1, 1, size_units]) * CUBESAT_UNIT
+            self.dimensions = np.array([1, 1, size_units]) * Constants.CUBESAT_UNIT
         else:
-            self.dimensions = np.array(size_units) * CUBESAT_UNIT
+            self.dimensions = np.array(size_units) * Constants.CUBESAT_UNIT
             
         # Initialize component and force lists
         self.components: List[Component] = []
@@ -161,7 +161,7 @@ class CubeSat:
             'num_forces': len(self.forces)
         }
         
-    def calculate_net_force_and_torque(self, state: Dict[str, Any]) -> Tuple[np.ndarray, np.ndarray]:
+    def calculate_net_force_and_torque(self, state: Dict[str, Any]) -> tuple[np.ndarray, np.ndarray]:
         """Calculate net force and torque from all sources."""
         net_force = np.zeros(3)
         net_torque = np.zeros(3)

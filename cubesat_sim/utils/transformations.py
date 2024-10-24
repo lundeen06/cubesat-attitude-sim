@@ -2,7 +2,7 @@
 
 import numpy as np
 from typing import Tuple
-from .constants import EARTH_RADIUS
+from .constants import Constants
 
 class Transformations:
     """
@@ -55,6 +55,7 @@ class Transformations:
         return position_ecef, velocity_ecef
     
     @staticmethod
+    @staticmethod
     def ecef_to_lla(position_ecef: np.ndarray) -> Tuple[float, float, float]:
         """
         Convert ECEF coordinates to LLA (Latitude, Longitude, Altitude).
@@ -68,7 +69,7 @@ class Transformations:
         x, y, z = position_ecef
         
         # WGS84 parameters
-        a = EARTH_RADIUS  # equatorial radius
+        a = Constants.EARTH_RADIUS  # Update reference
         e = 0.0818191908425  # eccentricity
         
         # Calculate longitude
@@ -102,7 +103,8 @@ class Transformations:
             Position vector in NED frame [north,east,down]
         """
         # Earth radius at reference
-        R = EARTH_RADIUS
+        R = Constants.EARTH_RADIUS  # Update reference
+        
         
         # Convert to meters
         d_lat = (lat - ref_lat) * R

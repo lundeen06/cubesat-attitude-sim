@@ -1,18 +1,11 @@
-# cubesat_sim/forces/aerodynamic.py
-
 from typing import Dict, Any, Tuple
 import numpy as np
-from ..utils.constants import ATMOSPHERIC_DENSITY
+from scipy.spatial.transform import Rotation  # Added this import
+from ..utils.constants import Constants
 from .force import Force
 
+
 class AerodynamicForce(Force):
-    """
-    Aerodynamic drag force and torque calculator.
-    
-    Calculates forces and torques due to atmospheric drag in LEO.
-    Can handle different atmospheric models and complex geometries.
-    """
-    
     def __init__(
         self,
         name: str = "aerodynamic",
@@ -20,16 +13,10 @@ class AerodynamicForce(Force):
         reference_altitude: float = 400000,  # meters
         custom_density: float = None,
     ):
-        """
-        Initialize aerodynamic force calculator.
-        
-        Args:
-            name: Unique identifier for this force
-            drag_coefficient: Drag coefficient (typically 2.2 for flat plate)
-            reference_altitude: Reference altitude in meters for density calculation
-            custom_density: Optional custom atmospheric density (kg/m³)
-        """
+        # Call parent class constructor first
         super().__init__(name)
+        
+        # Then initialize our own attributes
         self.drag_coefficient = drag_coefficient
         self.reference_altitude = reference_altitude
         
@@ -38,9 +25,9 @@ class AerodynamicForce(Force):
             self._density = custom_density
         else:
             # Find closest altitude in our density table
-            altitudes = np.array(list(ATMOSPHERIC_DENSITY.keys()))
+            altitudes = np.array(list(Constants.ATMOSPHERIC_DENSITY.keys()))
             idx = np.abs(altitudes - reference_altitude).argmin()
-            self._density = ATMOSPHERIC_DENSITY[altitudes[idx]]
+            self._density = Constants.ATMOSPHERIC_DENSITY[altitudes[idx]]
             
         # Store the last calculated values for visualization/analysis
         self._last_dynamic_pressure = 0.0

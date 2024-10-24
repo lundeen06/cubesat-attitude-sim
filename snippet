@@ -1,0 +1,26 @@
+def create_detumbling_summary(self, results: SimulationResults, 
+                               cubesat_dimensions: np.ndarray,
+                               save_path: Optional[str] = None):
+    fig, axes = plt.subplots(3, 1, figsize=(10, 12))
+    
+    # Angular velocity
+    self.plot_angular_velocity(results, axes[0])
+    axes[0].set_title('Angular Velocity During Detumbling')
+    
+    # Magnetic field
+    self.plot_magnetic_field(results, axes[1])
+    axes[1].set_title('Magnetic Field in Body Frame')
+    
+    # Magnetorquer commands
+    self.plot_magnetorquer_commands(results, axes[2])
+    axes[2].set_title('Magnetorquer Commands')
+    
+    plt.tight_layout()
+    
+    if save_path:
+        plt.savefig(save_path)
+    
+    # Create animation
+    anim_fig, anim = create_detumbling_animation(results, cubesat_dimensions)
+    
+    return fig, axes, anim_fig, anim

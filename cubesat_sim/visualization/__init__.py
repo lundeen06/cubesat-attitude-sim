@@ -1,4 +1,11 @@
 # cubesat_sim/visualization/__init__.py
 
-# This will be populated once we implement visualization
-__all__ = []
+from .renderer import CubeSatRenderer
+from .plots import SimulationPlotter
+from .animate import create_detumbling_animation
+
+__all__ = [
+    'CubeSatRenderer',
+    'SimulationPlotter',
+    'create_detumbling_animation'
+]

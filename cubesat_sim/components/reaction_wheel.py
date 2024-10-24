@@ -1,8 +1,8 @@
-# cubesat_sim/forces/reaction_wheel.py
+# cubesat_sim/components/reaction_wheel.py
 
 from typing import Dict, Any, Tuple
 import numpy as np
-from .actuator import Actuator
+from ..forces.actuator import Actuator  # Updated import
 
 class ReactionWheel(Actuator):
     """

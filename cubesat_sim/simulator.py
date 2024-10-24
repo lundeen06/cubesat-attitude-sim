@@ -10,6 +10,7 @@ import json
 from .cubesat import CubeSat
 from .forces import Force
 from .components import Component
+from .utils.constants import Constants
 
 @dataclass
 class SimulationConfig:
@@ -216,60 +217,67 @@ class Simulator:
         """Stop simulation."""
         self._running = False
     
-    # Add this method to the Simulator class
-
-def setup_tumbling_state(
+    def setup_tumbling_state(
     self,
     max_angular_velocity: float = 0.1,  # rad/s
-    random_attitude: bool = True
+    random_attitude: bool = True,
+    altitude: float = 400000  # Default 400km altitude
 ):
-    """
-    Set up an initial tumbling state for the spacecraft.
-    
-    Args:
-        max_angular_velocity: Maximum angular velocity magnitude (rad/s)
-        random_attitude: Whether to randomize initial attitude
-    """
-    # Generate random angular velocity
-    angular_velocity = np.random.uniform(
-        -max_angular_velocity,
-        max_angular_velocity,
-        3
-    )
-    
-    # Generate random quaternion if requested
-    if random_attitude:
-        # Random rotation axis
-        axis = np.random.randn(3)
-        axis = axis / np.linalg.norm(axis)
+        """
+        Set up an initial tumbling state for the spacecraft.
         
-        # Random rotation angle
-        angle = np.random.uniform(0, 2*np.pi)
+        Args:
+            max_angular_velocity: Maximum angular velocity magnitude (rad/s)
+            random_attitude: Whether to randomize initial attitude
+            altitude: Initial orbital altitude in meters
+        """
+        # Generate random angular velocity
+        angular_velocity = np.random.uniform(
+            -max_angular_velocity,
+            max_angular_velocity,
+            3
+        )
         
-        # Convert to quaternion (scalar last format)
-        quaternion = np.array([
-            axis[0] * np.sin(angle/2),
-            axis[1] * np.sin(angle/2),
-            axis[2] * np.sin(angle/2),
-            np.cos(angle/2)
-        ])
-    else:
-        quaternion = np.array([0, 0, 0, 1])  # Identity quaternion
-    
-    # Update spacecraft state
-    self.cubesat.state.update({
-        'angular_velocity': angular_velocity,
-        'quaternion': quaternion
+        # Generate random quaternion if requested
+        if random_attitude:
+            # Random rotation axis
+            axis = np.random.randn(3)
+            axis = axis / np.linalg.norm(axis)
+            
+            # Random rotation angle
+            angle = np.random.uniform(0, 2*np.pi)
+            
+            # Convert to quaternion (scalar last format)
+            quaternion = np.array([
+                axis[0] * np.sin(angle/2),
+                axis[1] * np.sin(angle/2),
+                axis[2] * np.sin(angle/2),
+                np.cos(angle/2)
+            ])
+        else:
+            quaternion = np.array([0, 0, 0, 1])  # Identity quaternion
+        
+        # Set initial position at specified altitude
+        position = np.array([0, 0, Constants.EARTH_RADIUS + altitude])  # Start above north pole
+        velocity = np.array([7700, 0, 0])  # Approximate orbital velocity for LEO
+        
+        # Update spacecraft state
+        self.cubesat.state.update({
+            'angular_velocity': angular_velocity,
+            'quaternion': quaternion,
+            'position': position,
+            'velocity': velocity,
+            'magnetic_field': np.array([0, 0.2e-4, -0.4e-4])  # Approximate field strength in Tesla
+        })
+        
+        self.log_event('tumbling_initialized', {
+            'angular_velocity': angular_velocity.tolist(),
+            'angular_velocity_magnitude': np.linalg.norm(angular_velocity),
+            'quaternion': quaternion.tolist(),
+            'altitude': altitude,
+            'position': position.tolist(),
+            'velocity': velocity.tolist()
     })
-    
-    self.log_event('tumbling_initialized', {
-        'angular_velocity': angular_velocity.tolist(),
-        'angular_velocity_magnitude': np.linalg.norm(angular_velocity),
-        'quaternion': quaternion.tolist()
-    })
-
-    # Built-in scenarios
-    # First let's update the _scenario_detumble method in simulator.py
 
     def _scenario_detumble(self):
         """

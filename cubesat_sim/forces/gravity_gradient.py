@@ -3,7 +3,7 @@
 from typing import Dict, Any, Tuple
 import numpy as np
 from scipy.spatial.transform import Rotation
-from ..utils.constants import EARTH_MU, EARTH_RADIUS
+from ..utils.constants import Constants  # Update import
 from .force import Force
 
 class GravityGradient(Force):
@@ -18,7 +18,7 @@ class GravityGradient(Force):
     def __init__(
         self,
         name: str = "gravity_gradient",
-        earth_mu: float = EARTH_MU,
+        earth_mu: float = Constants.EARTH_MU,  # Update reference
         min_altitude: float = 100000  # meters, for safety checks
     ):
         """
@@ -29,6 +29,7 @@ class GravityGradient(Force):
             earth_mu: Earth's gravitational parameter (m³/s²)
             min_altitude: Minimum allowed altitude for calculations
         """
+        self.name = name
         super().__init__(name)
         self.earth_mu = earth_mu
         self.min_altitude = min_altitude
@@ -71,7 +72,7 @@ class GravityGradient(Force):
         
         # Calculate orbital radius and check altitude
         self._last_orbital_radius = np.linalg.norm(position)
-        altitude = self._last_orbital_radius - EARTH_RADIUS
+        altitude = self._last_orbital_radius - Constants.EARTH_RADIUS
         if altitude < self.min_altitude:
             raise ValueError(f"Altitude {altitude/1000:.1f}km below minimum {self.min_altitude/1000:.1f}km")
         

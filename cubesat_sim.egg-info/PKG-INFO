@@ -1,0 +1,6 @@
+Metadata-Version: 2.1
+Name: cubesat_sim
+Version: 0.1
+Requires-Dist: numpy>=1.20.0
+Requires-Dist: scipy>=1.7.0
+Requires-Dist: matplotlib>=3.4.0

@@ -2,7 +2,7 @@
 
 from typing import Dict, Any
 import numpy as np
-from ..utils.constants import SOLAR_PANEL_DENSITY
+from ..utils.constants import Constants  # Update import
 from .component import Component
 
 class SolarPanel(Component):
@@ -20,7 +20,7 @@ class SolarPanel(Component):
         mounting_position: np.ndarray,
         mounting_orientation: np.ndarray,
         deployment_angle: float = None,
-        mass_per_area: float = SOLAR_PANEL_DENSITY
+        mass_per_area: float = Constants.SOLAR_PANEL_DENSITY  # Update reference
     ):
         """
         Initialize deployable solar panel.

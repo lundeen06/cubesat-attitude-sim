@@ -3,7 +3,7 @@
 from typing import Dict, Any, Tuple
 import numpy as np
 from scipy.spatial.transform import Rotation
-from ..utils.constants import EARTH_MAGNETIC_DIPOLE
+from ..utils.constants import Constants  # Update import
 from .force import Force
 
 class MagneticForce(Force):
@@ -20,7 +20,7 @@ class MagneticForce(Force):
         self,
         name: str = "magnetic",
         residual_dipole: np.ndarray = None,
-        earth_dipole: float = EARTH_MAGNETIC_DIPOLE,
+        earth_dipole: float = Constants.EARTH_MAGNETIC_DIPOLE,  # Update reference
         custom_field_model: callable = None
     ):
         """
@@ -33,6 +33,7 @@ class MagneticForce(Force):
             custom_field_model: Optional custom magnetic field model function
                               Takes position vector, returns B-field vector
         """
+        self.name = name
         super().__init__(name)
         
         # Set residual dipole (default: small Z-axis dipole)
