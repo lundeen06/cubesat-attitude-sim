@@ -243,4 +243,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Based on spacecraft dynamics equations from Wertz's "Spacecraft Attitude Determination and Control"
 - Magnetic field models from the International Geomagnetic Reference Field (IGRF)
 - Visualization inspired by NASA's General Mission Analysis Tool (GMAT)
-```
+- The one and only Claude 3.5 Sonnet (big up yourself buddy, you cooked)
