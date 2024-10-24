@@ -1,7 +1,7 @@
 # cubesat-attitude-sim
  
 ```mermaid
-%%{init: {'theme': 'dark'}}%%
+%%{init: {'theme': 'forest'}}%%
 classDiagram
     class CubeSat {
         +dimensions
